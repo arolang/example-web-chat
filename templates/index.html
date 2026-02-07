@@ -26,7 +26,7 @@
     <div id="messages">
 {{ for each <msg> in <recent-messages> { }}
         <div class="message">
-            <div class="time">{{ <msg: createdAt> }}</div>
+            <div class="time">{{ <msg: createdAt> | date: "dd.MM.yyyy HH:mm" }}</div>
             <div>{{ <msg: message> }}</div>
         </div>
 {{ } }}
@@ -37,7 +37,11 @@
         var f = document.getElementById('f');
         var i = document.getElementById('msg');
 
-        function fmt(t) { return new Date(t).toLocaleString(); }
+        function fmt(t) {
+            var d = new Date(t);
+            var pad = function(n) { return n < 10 ? '0' + n : n; };
+            return pad(d.getUTCDate()) + '.' + pad(d.getUTCMonth() + 1) + '.' + d.getUTCFullYear() + ' ' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes());
+        }
         function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 
         function add(msg) {
