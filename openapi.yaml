@@ -9,7 +9,7 @@ servers:
     description: Local development server
 
 paths:
-  /home:
+  /:
     get:
       operationId: homePage
       summary: Serve the main HTML page
