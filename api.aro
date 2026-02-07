@@ -1,13 +1,16 @@
 (* HTTP Route Handlers *)
 
 (homePage: StatusPost API) {
+    <Retrieve> the <all-messages> from the <message-repository>.
+    <Extract> the <recent-messages: 0-19> from the <all-messages>.
     <Transform> the <html> from the <template: index.html>.
     <Return> an <OK: status> with <html>.
 }
 
 (getMessages: StatusPost API) {
     <Retrieve> the <all-messages> from the <message-repository>.
-    <Return> an <OK: status> with <all-messages>.
+    <Extract> the <recent-messages: 0-19> from the <all-messages>.
+    <Return> an <OK: status> with <recent-messages>.
 }
 
 (postMessage: StatusPost API) {
@@ -20,4 +23,14 @@
     <Store> the <message> into the <message-repository>.
     <Broadcast> the <message> to the <websocket>.
     <Return> a <Created: status> with <message>.
+}
+
+(* Repository Observer - cleanup when message count exceeds 40 *)
+(Cleanup Messages: message-repository Observer) when <message-repository: count> > 40 {
+    <Retrieve> the <all-messages> from the <message-repository>.
+    <Extract> the <keep-messages: 0-19> from the <all-messages>.
+    <Clear> the <all> from the <message-repository>.
+    <Store> the <keep-messages> into the <message-repository>.
+    <Log> "Cleaned up messages, kept last 20" to the <console>.
+    <Return> an <OK: status> for the <cleanup>.
 }

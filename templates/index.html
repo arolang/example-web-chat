@@ -23,7 +23,14 @@
         </form>
     </div>
     <div id="status" class="disconnected">Connecting...</div>
-    <div id="messages"></div>
+    <div id="messages">
+{{ for each <msg> in <recent-messages> { }}
+        <div class="message">
+            <div class="time">{{ <msg: createdAt> }}</div>
+            <div>{{ <msg: message> }}</div>
+        </div>
+{{ } }}
+    </div>
     <script>
         var m = document.getElementById('messages');
         var s = document.getElementById('status');
@@ -39,11 +46,6 @@
             d.innerHTML = '<div class="time">' + fmt(msg.createdAt) + '</div><div>' + esc(msg.message) + '</div>';
             m.insertBefore(d, m.firstChild);
         }
-
-        fetch('/messages').then(function(r) { return r.json(); }).then(function(res) {
-            var msgs = res.data || res || [];
-            if (Array.isArray(msgs)) msgs.forEach(add);
-        });
 
         var ws;
         function connect() {
