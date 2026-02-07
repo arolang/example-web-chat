@@ -2,7 +2,7 @@
 
 (Application-Start: StatusPost) {
     <Log> "Starting StatusPost..." to the <console>.
-    <Start> the <http-server> with {}.
+    <Start> the <http-server> with { websocket: "/ws" }.
     <Log> "StatusPost ready on http://localhost:8080" to the <console>.
     <Log> "WebSocket available on ws://localhost:8080/ws" to the <console>.
     <Keepalive> the <application> for the <events>.
