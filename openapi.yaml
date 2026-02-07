@@ -1,0 +1,74 @@
+openapi: 3.0.3
+info:
+  title: StatusPost API
+  description: Real-time status posting with WebSocket updates
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+paths:
+  /home:
+    get:
+      operationId: homePage
+      summary: Serve the main HTML page
+      responses:
+        '200':
+          description: HTML page
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /messages:
+    get:
+      operationId: getMessages
+      summary: Get last 20 messages
+      responses:
+        '200':
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+    post:
+      operationId: postMessage
+      summary: Post a new message
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+              required:
+                - message
+      responses:
+        '201':
+          description: Message created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+components:
+  schemas:
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - message
+        - createdAt

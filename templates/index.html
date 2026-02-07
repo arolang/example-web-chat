@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>StatusPost</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .form { margin-bottom: 20px; }
+        input { padding: 8px; width: 70%; }
+        button { padding: 8px 16px; }
+        .message { padding: 10px; border-bottom: 1px solid #ccc; }
+        .time { font-size: 12px; color: #999; }
+        #status { padding: 5px; font-size: 12px; }
+        .connected { color: green; }
+        .disconnected { color: red; }
+    </style>
+</head>
+<body>
+    <h1>StatusPost</h1>
+    <div class="form">
+        <form id="f">
+            <input type="text" id="msg" placeholder="Message..." required>
+            <button type="submit">Post</button>
+        </form>
+    </div>
+    <div id="status" class="disconnected">Connecting...</div>
+    <div id="messages"></div>
+    <script>
+        var m = document.getElementById('messages');
+        var s = document.getElementById('status');
+        var f = document.getElementById('f');
+        var i = document.getElementById('msg');
+
+        function fmt(t) { return new Date(t).toLocaleString(); }
+        function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+        function add(msg) {
+            var d = document.createElement('div');
+            d.className = 'message';
+            d.innerHTML = '<div class="time">' + fmt(msg.createdAt) + '</div><div>' + esc(msg.message) + '</div>';
+            m.insertBefore(d, m.firstChild);
+        }
+
+        fetch('/messages').then(function(r) { return r.json(); }).then(function(res) {
+            var msgs = res.data || res || [];
+            if (Array.isArray(msgs)) msgs.forEach(add);
+        });
+
+        var ws;
+        function connect() {
+            ws = new WebSocket((location.protocol === 'https:' ? 'wss:' : 'ws:') + '//' + location.host + '/ws');
+            ws.onopen = function() { s.textContent = 'Connected'; s.className = 'connected'; };
+            ws.onmessage = function(e) { try { add(JSON.parse(e.data)); } catch(err) {} };
+            ws.onclose = function() { s.textContent = 'Disconnected'; s.className = 'disconnected'; setTimeout(connect, 3000); };
+        }
+        connect();
+
+        f.onsubmit = function(e) {
+            e.preventDefault();
+            var msg = i.value.trim();
+            if (!msg) return;
+            fetch('/messages', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'message=' + encodeURIComponent(msg) });
+            i.value = '';
+        };
+    </script>
+</body>
+</html>

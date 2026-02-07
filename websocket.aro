@@ -1,0 +1,13 @@
+(* WebSocket Event Handlers *)
+
+(Handle WebSocket Connect: WebSocket Event Handler) {
+    <Extract> the <connection-id> from the <event: id>.
+    <Log> "WebSocket client connected" to the <console>.
+    <Return> an <OK: status> for the <connection>.
+}
+
+(Handle WebSocket Disconnect: WebSocket Event Handler) {
+    <Extract> the <connection-id> from the <event: connectionId>.
+    <Log> "WebSocket client disconnected" to the <console>.
+    <Return> an <OK: status> for the <disconnection>.
+}

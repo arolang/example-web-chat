@@ -1,0 +1,23 @@
+(* HTTP Route Handlers *)
+
+(homePage: StatusPost API) {
+    <Transform> the <html> from the <template: index.html>.
+    <Return> an <OK: status> with <html>.
+}
+
+(getMessages: StatusPost API) {
+    <Retrieve> the <all-messages> from the <message-repository>.
+    <Return> an <OK: status> with <all-messages>.
+}
+
+(postMessage: StatusPost API) {
+    <Extract> the <body> from the <request: body>.
+    <Extract> the <message-text: message> from the <body>.
+    <Create> the <message: Message> with {
+        message: <message-text>,
+        createdAt: <now>
+    }.
+    <Store> the <message> into the <message-repository>.
+    <Broadcast> the <message> to the <websocket>.
+    <Return> a <Created: status> with <message>.
+}
