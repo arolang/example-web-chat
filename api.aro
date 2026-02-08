@@ -1,5 +1,12 @@
 (* HTTP Route Handlers *)
 
+(serveStatic: StatusPost API) {
+    <Extract> the <file> from the <pathParameters: file>.
+    <Create> the <template-path> with "static/" ++ <file>.
+    <Transform> the <content> from the <template: template-path>.
+    <Return> an <OK: status> with <content>.
+}
+
 (homePage: StatusPost API) {
     <Retrieve> the <all-messages> from the <message-repository>.
     <Extract> the <recent-messages: 0-19> from the <all-messages>.

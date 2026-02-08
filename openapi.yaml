@@ -21,6 +21,22 @@ paths:
               schema:
                 type: string
 
+  /static/{file}:
+    get:
+      operationId: serveStatic
+      summary: Serve static files (CSS, JS)
+      parameters:
+        - name: file
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Static file content
+        '404':
+          description: File not found
+
   /messages:
     get:
       operationId: getMessages
