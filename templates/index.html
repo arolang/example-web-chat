@@ -1,26 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
     <title>StatusPost</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>StatusPost</h1>
-    <div class="form">
-        <form id="f">
-            <input type="text" id="msg" placeholder="Message..." required>
-            <button type="submit">Post</button>
-        </form>
-    </div>
-    <div id="status" class="disconnected">Connecting...</div>
-    <div id="messages">
+    <div class="container">
+        <header>
+            <h1>StatusPost</h1>
+            <p class="tagline">Real-time updates, beautifully simple</p>
+        </header>
+
+        <main>
+            <div class="card compose">
+                <form id="f">
+                    <input type="text" id="msg" placeholder="What's on your mind?" autocomplete="off" required>
+                    <button type="submit">
+                        <span>Post</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+
+            <div class="status-bar">
+                <div id="status" class="status disconnected">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Connecting...</span>
+                </div>
+            </div>
+
+            <div id="messages" class="messages">
 {{ for each <msg> in <recent-messages> { }}
-        <div class="message">
-            <div class="time">{{ <msg: createdAt> | date: "dd.MM.yyyy HH:mm" }}</div>
-            <div>{{ <msg: message> }}</div>
-        </div>
+                <article class="card message">
+                    <time class="time">{{ <msg: createdAt> | date: "dd.MM.yyyy HH:mm" }}</time>
+                    <p class="content">{{ <msg: message> }}</p>
+                </article>
 {{ } }}
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by <a href="https://arolang.github.io/aro/" target="_blank">ARO</a></p>
+        </footer>
     </div>
+
     <script src="/static/app.js"></script>
 </body>
 </html>

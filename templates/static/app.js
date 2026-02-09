@@ -1,35 +1,43 @@
-var m = document.getElementById('messages');
-var s = document.getElementById('status');
-var f = document.getElementById('f');
-var i = document.getElementById('msg');
+(function() {
+    'use strict';
+    var messages = document.getElementById('messages');
+    var status = document.getElementById('status');
+    var statusText = status.querySelector('.status-text');
+    var form = document.getElementById('f');
+    var input = document.getElementById('msg');
 
-function fmt(t) {
-    var d = new Date(t);
-    var pad = function(n) { return n < 10 ? '0' + n : n; };
-    return pad(d.getUTCDate()) + '.' + pad(d.getUTCMonth() + 1) + '.' + d.getUTCFullYear() + ' ' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes());
-}
-function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+    function fmt(t) {
+        var d = new Date(t);
+        var pad = function(n) { return n < 10 ? '0' + n : n; };
+        return pad(d.getDate()) + '.' + pad(d.getMonth() + 1) + '.' + d.getFullYear() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    }
 
-function add(msg) {
-    var d = document.createElement('div');
-    d.className = 'message';
-    d.innerHTML = '<div class="time">' + fmt(msg.createdAt) + '</div><div>' + esc(msg.message) + '</div>';
-    m.insertBefore(d, m.firstChild);
-}
+    function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 
-var ws;
-function connect() {
-    ws = new WebSocket((location.protocol === 'https:' ? 'wss:' : 'ws:') + '//' + location.host + '/ws');
-    ws.onopen = function() { s.textContent = 'Connected'; s.className = 'connected'; };
-    ws.onmessage = function(e) { try { add(JSON.parse(e.data)); } catch(err) {} };
-    ws.onclose = function() { s.textContent = 'Disconnected'; s.className = 'disconnected'; setTimeout(connect, 3000); };
-}
-connect();
+    function add(msg) {
+        var el = document.createElement('article');
+        el.className = 'card message';
+        el.innerHTML = '<time class="time">' + fmt(msg.createdAt) + '</time><p class="content">' + esc(msg.message) + '</p>';
+        messages.insertBefore(el, messages.firstChild);
+    }
 
-f.onsubmit = function(e) {
-    e.preventDefault();
-    var msg = i.value.trim();
-    if (!msg) return;
-    fetch('/messages', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'message=' + encodeURIComponent(msg) });
-    i.value = '';
-};
+    var ws, delay = 1000;
+    function connect() {
+        ws = new WebSocket((location.protocol === 'https:' ? 'wss:' : 'ws:') + '//' + location.host + '/ws');
+        ws.onopen = function() { status.className = 'status connected'; statusText.textContent = 'Connected'; delay = 1000; };
+        ws.onmessage = function(e) { try { add(JSON.parse(e.data)); } catch(err) {} };
+        ws.onclose = function() { status.className = 'status disconnected'; statusText.textContent = 'Reconnecting...'; setTimeout(connect, delay); delay = Math.min(delay * 2, 30000); };
+        ws.onerror = function() { ws.close(); };
+    }
+    connect();
+
+    form.onsubmit = function(e) {
+        e.preventDefault();
+        var msg = input.value.trim();
+        if (!msg) return;
+        fetch('/messages', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'message=' + encodeURIComponent(msg) });
+        input.value = '';
+    };
+
+    input.focus();
+})();
