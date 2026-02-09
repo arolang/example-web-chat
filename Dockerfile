@@ -27,7 +27,7 @@ FROM ghcr.io/arolang/aro-runtime:latest
 WORKDIR /app
 
 # Copy compiled binary from builder
-COPY --from=builder /app/StatusPost ./StatusPost
+COPY --from=builder /app/app ./app
 
 # Copy runtime assets (templates, openapi spec)
 COPY --from=builder /app/openapi.yaml ./
@@ -41,4 +41,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8080/ || exit 1
 
 # Run the application
-CMD ["./StatusPost"]
+CMD ["./app"]
