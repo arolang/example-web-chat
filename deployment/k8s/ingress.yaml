@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: statuspost
+  labels:
+    app: statuspost
+    app.kubernetes.io/name: statuspost
+    app.kubernetes.io/component: server
+  annotations:
+    # Enable WebSocket support
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/upstream-hash-by: "$remote_addr"
+    # Optional: Enable SSL redirect
+    # nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: statuspost.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: statuspost
+                port:
+                  name: http
+  # Optional: TLS configuration
+  # tls:
+  #   - hosts:
+  #       - statuspost.example.com
+  #     secretName: statuspost-tls

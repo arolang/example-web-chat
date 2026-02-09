@@ -1,0 +1,20 @@
+# Build artifacts
+.build/
+StatusPost
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md
+
+# Deployment (not needed in image)
+deployment/
+Dockerfile
+.dockerignore

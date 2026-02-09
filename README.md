@@ -43,3 +43,64 @@ StatusPost/
 2. The page connects to `/ws` via WebSocket
 3. When a message is posted, it's stored and broadcast to all connected clients
 4. All clients receive the new message in real-time
+
+## Docker
+
+Build the container image:
+
+```bash
+docker build -t statuspost:latest .
+```
+
+Run locally:
+
+```bash
+docker run -p 8080:8080 statuspost:latest
+```
+
+## Kubernetes Deployment
+
+Deploy to Kubernetes using kustomize:
+
+```bash
+# Preview the manifests
+kubectl kustomize deployment/k8s/
+
+# Apply to cluster
+kubectl apply -k deployment/k8s/
+```
+
+Or apply manifests directly:
+
+```bash
+kubectl apply -f deployment/k8s/deployment.yaml
+kubectl apply -f deployment/k8s/service.yaml
+kubectl apply -f deployment/k8s/ingress.yaml
+```
+
+### Configuration
+
+Edit `deployment/k8s/kustomization.yaml` to customize the image:
+
+```yaml
+images:
+  - name: statuspost
+    newName: your-registry/statuspost
+    newTag: v1.0.0
+```
+
+Edit `deployment/k8s/ingress.yaml` to set your hostname:
+
+```yaml
+spec:
+  rules:
+    - host: your-domain.com
+```
+
+## CI/CD
+
+GitHub Actions automatically builds and pushes the Docker image to `ghcr.io` on:
+
+- Push to `main` branch → tagged as `main`
+- Version tags (`v*`) → tagged as version (e.g., `v1.0.0` → `1.0.0`)
+- Pull requests → build only (no push)
