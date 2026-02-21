@@ -49,13 +49,20 @@ StatusPost/
 Build the container image:
 
 ```bash
-docker build -t statuspost:latest .
+docker build -t ghcr.io/arolang/example-statuspost:latest .
 ```
 
 Run locally:
 
 ```bash
-docker run -p 8080:8080 statuspost:latest
+docker run -p 8080:8080 ghcr.io/arolang/example-statuspost:latest
+```
+
+Or pull the pre-built image directly:
+
+```bash
+docker pull ghcr.io/arolang/example-statuspost:latest
+docker run -p 8080:8080 ghcr.io/arolang/example-statuspost:latest
 ```
 
 ## Kubernetes Deployment
@@ -85,7 +92,7 @@ Edit `deployment/k8s/kustomization.yaml` to customize the image:
 ```yaml
 images:
   - name: statuspost
-    newName: your-registry/statuspost
+    newName: ghcr.io/arolang/example-statuspost
     newTag: v1.0.0
 ```
 
