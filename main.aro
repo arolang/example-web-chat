@@ -1,16 +1,16 @@
 (* StatusPost - Real-time message board with WebSocket updates *)
 
 (Application-Start: StatusPost) {
-    <Log> "Starting StatusPost..." to the <console>.
-    <Start> the <http-server> with { websocket: "/ws" }.
-    <Log> "StatusPost ready on http://localhost:8080" to the <console>.
-    <Log> "WebSocket available on ws://localhost:8080/ws" to the <console>.
-    <Keepalive> the <application> for the <events>.
-    <Return> an <OK: status> for the <startup>.
+    Log "Starting StatusPost..." to the <console>.
+    Start the <http-server> with { websocket: "/ws" }.
+    Log "StatusPost ready on http://localhost:8080" to the <console>.
+    Log "WebSocket available on ws://localhost:8080/ws" to the <console>.
+    Keepalive the <application> for the <events>.
+    Return an <OK: status> for the <startup>.
 }
 
 (Application-End: Success) {
-    <Log> "StatusPost shutting down..." to the <console>.
-    <Stop> the <http-server> with {}.
-    <Return> an <OK: status> for the <shutdown>.
+    Log "StatusPost shutting down..." to the <console>.
+    Stop the <http-server> with {}.
+    Return an <OK: status> for the <shutdown>.
 }
