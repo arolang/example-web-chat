@@ -15,5 +15,5 @@ commonLabels:
 
 images:
   - name: statuspost
-    newName: ghcr.io/arolang/statuspost
+    newName: ghcr.io/arolang/example-statuspost
     newTag: latest

@@ -1,6 +1,6 @@
-# Web Chat
+# StatusPost
 
-A real-time chat application built with ARO, demonstrating WebSocket support for live message updates.
+A real-time status posting application built with ARO, demonstrating WebSocket support for live message updates.
 
 ## Features
 
